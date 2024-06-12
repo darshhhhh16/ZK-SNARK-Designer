@@ -1,43 +1,55 @@
 pragma circom 2.0.0;
 
-template Circuit () {
-    signal input a;
-    signal input b;
-    signal x;
-    signal y;
-    signal output q;
-    component andGate = AND();
-    component notGate = NOT();
-    component orGate = OR();
-    andGate.a <== a;
-    andGate.b <== b;
-    notGate.in <== b;
-    orGate.c <== andGate.out;
-    orGate.d <== notGate.out;
-    x <== orGate.out;
-    y <== notGate.out;
-    q <== orGate.out;
+template GivenCircuit () {  
+
+   signal input a;
+   signal input b;
+
+   signal X;
+   signal Y;
+   
+   signal output Q;
+
+   // Component gates used to create custom curcuit
+   component andGate = AND();
+   component notGate = NOT();
+   component orGate = OR();
+
+   // Circuit Logic
+   andGate.a <== a;
+   andGate.b <== b;
+   X <== andGate.out;
+
+   notGate.in <== b;
+   Y <== notGate.out;
+
+   orGate.a <== X;
+   orGate.b <== Y;
+   Q <== orGate.out;
+
 }
 
 template AND() {
-
-    signal input x;
-    signal input y;
+    signal input a;
+    signal input b;
     signal output out;
-    out <== x * y;
+
+    out <== a*b;
 }
 
 template NOT() {
     signal input in;
     signal output out;
-    out <== 1 + in - 2 * in;
+
+    out <== 1 + in - 2*in;
 }
 
 template OR() {
-    signal input x;
-    signal input y;
+    signal input a;
+    signal input b;
     signal output out;
-    out <== x + y - x * y;
+
+    out <== a + b - a*b;
 }
 
-component main = Circuit();
+component main = GivenCircuit();
